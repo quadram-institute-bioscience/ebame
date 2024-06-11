@@ -1,3 +1,3 @@
 title: 9th EBAME Workshop
 description: Workshop on Computational Microbial Ecogenomics (Brest, France)
-modules: ["EBAME-9", "Anvio", "MAGs", "Viromics", "Molecular Ecology", "Metabolism"]
+modules: ["Intro", "Anvio", "MAGs", "Viromics", "Ecology", "Metabolism"]
