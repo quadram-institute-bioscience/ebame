@@ -1,3 +1,3 @@
 title: Viromics workshop
-description: Mining phages in metagenomes
+description: Mining phages in metagenomes - EBAME 9
 modules: ["Intro", "Mining", "Mapping", "Anvio", "Pipelines", "Extras"]

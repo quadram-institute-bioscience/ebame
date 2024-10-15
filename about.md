@@ -2,80 +2,17 @@
 layout: page
 ---
 
-# About the workshop 
+<details>
+  <summary>What is this script doing?</summary>
+  
+  The script will:
+  1. Check you are on an EBAME VM
+  2. Install some packages with apt, including `visidata` is a tool to visualise tabular data (tsv, csv).
+  3. Install a configuration profile for GNU Screen
+  4. Make a `$VIROME` variable to quickly find our data
 
-## 📍 Venue
-
-The workshop will be held exclusively in English and hosted by the [European Institute for Marine Sciences at Best University](https://www-iuem.univ-brest.fr/the-institute/?lang=en),
-from **October 12-24, 2024**. 
-
-The institute is located on the wonderful setting of the Bay of Brest, at the heart of the largest French marine science campus,
-with easy access from Brest Bretagne international airport and train station. 
-Funds and help for on-site child care and family accomodation will be available.
-
-## 💳 Attendance Fee
-
-Fee of **950 euros** per attendee for the 2 weeks workshop participation. 
-It includes lunch meals, snacks, coffee breaks and housing in small houses on the waterfront.
-
-The workshop organization is made possible thanks to the sponsor of the ISBLUE graduate school, the IUEM Marine Science Institute, the region Bretagne, the Brest University research council, the  Brest Metropole BMO.
+</details>
 
 
-## 💬 EBAME alumni words…
-
-What participants wrote:
-
-> EBAME was a really great experience, and will be really useful for my work Attend to EBAME8 was an incredible opportunity to meet methods,
-> scientists and topics that will be applied in my project.
-
----
-
-> EBAME8 has been an amazing experience! Everything, from the accomodation to the meals, was perfectly organised.
-> This allowed us to focus on the very interesting lectures that were given. I truly enjoyed the enthusiasm and passion the lecturers showed during the
-> classes and seminars. Besides, it was a unique opportunity to network with other PhD students,
-> to exchange scientific ideas with them - something I never experienced before and that excited me a lot.
-> The coast of Brest was such a perfect frame for those two weeks! I would only suggest the lecturers to involve the students more in some classes,
-> as the course is very intense and it would be a pity to miss some parts of it.
-> I thank very much all organisers and lecturers, it was a great opportunity to be part of this experience!
-
----
-
-> EBAME was a great opportunity for me to get my feet wet in a wide range of bioinformatic methods.
-> Those methods specifically relevant to my research I was able to deep dive on.
-> I left the workshop having overhauled some of my analytical processes and with the new results to show for it.
-> Moreover, meeting other researchers in this field and socializing with the other early career researchers was very fun and
-> scientifically interesting as well.
-
----
-
-> The EBME workshop, although very intense, was overall very inshightful.
-> It is an amazing oportunity to learn and enhance our bioinformatic habilities and at the same time it is a great place to meet
-> people from around the globe with different backgrounds and work field.
-> Super interesting to get different point of views.
-
----
-
-> I really think that this is one of the courses that I have found more useful in my entire career.
-> Among many other things, it has made me lose fear when facing these omics things,
-> which before EBAME were like a extremely inaccessible and mysterious universe…
-> Thank you so much for all the energy, knowledge and effort that you put in setting up the course!
-> I have already recommended it to many people.
-
----
-
-> EBAME was a great opportunity for me to meet and interact with other researchers working on -omic techniques.
-> I specifically enjoyed the talks and tutorials regarding Anvi'o but I was happy to learn other concepts that are unrelated to my work.
-> It was mentally exhausting but the logistics was perfectly taken care of by the organizers.
-> In conclusion, I highly recommend this workshop to my peers focusing on bioinformatics.
-
----
-
-> As a participant in EBAME8, I thoroughly enjoyed the workshop, which exceeded all my expectations. The organizers and lecturers managed to create a great environment for learning, discussions, and the exchange of knowledge, all within the company of like-minded individuals. The workshop provided a comprehensive overview of various approaches to studying the microbiome in different ecosystems, complemented by hands-on sessions for each topic. While you may not become an expert in these tools and topics during these two weeks, you’ll get an overview of what’s available and how it can be applied to your research. Additionally, you’ll have the opportunity to talk with field experts and ask them various questions you have in mind. By the way, if you find yourself at EBAME, don’t hesitate to ask questions, even if they seem basic. These questions could lead to deep discussions about the essence of existing concepts in the field, which was another great aspect of EBAME for me! So, if you’re seeking a course on microbial metagenomics, this is the ideal place for you! As a bonus, you might also enjoy a panoramic view of the stormy sea during sessions, which adds an extra layer of coziness to the EBAME experience :)
-
----
-
-> EBAME8 was an amazing experience as it opened a new world of opportunities to work with -omics data for those of us without a strong background in bioinformatics. Highly recommended!
-
----
-
-> The EBAME course is a great opportunity to learn from very skilled bioinformaticians on the latest methods and tools available to analyse your genomic data. The seminars are informative and the labs give you a chance for hands on learning too. There are also plenty of networking opportunities and chances to discuss your own research.
+:warning: if the connection to a remote machine drops, the running programs will be terminated. 
+See a small tutorial on [GNU screen :link:](https://github.com/telatin/learn_bash/wiki/Using-%22screen%22) on how to manage this problem.
