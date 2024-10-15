@@ -36,3 +36,7 @@ jumbotron_icon: "img/box-icon.png"
 #green b2c720
 #darkblue 0077bb
 #lightblue 029fde
+
+
+plugins:
+  - jemoji
