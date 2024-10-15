@@ -1,3 +1,3 @@
-title: 9th EBAME Workshop
-description: Workshop on Computational Microbial Ecogenomics (Brest, France)
-modules: ["Intro", "Anvio", "MAGs", "Viromics", "Ecology", "Metabolism"]
+title: Viromics workshop
+description: Mining phages in metagenomes
+modules: ["Intro", "Mining", "Mapping", "Anvio", "Pipelines", "Extras"]
