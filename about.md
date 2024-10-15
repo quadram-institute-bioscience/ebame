@@ -5,15 +5,15 @@ layout: page
 <details>
   <summary>What is this script doing?</summary>
   
-  The script will:
+The script will:
 
-  1. Check you are on an EBAME VM
+* Check you are on an EBAME VM
    
-  2. Install some packages with apt, including `visidata` is a tool to visualise tabular data (tsv, csv).
+* Install some packages with apt, including `visidata` is a tool to visualise tabular data (tsv, csv).
    
-  3. Install a configuration profile for GNU Screen
+* Install a configuration profile for GNU Screen
    
-  4. Make a `$VIROME` variable to quickly find our data
+* Make a `$VIROME` variable to quickly find our data
 
 </details>
 
