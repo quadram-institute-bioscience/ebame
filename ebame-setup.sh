@@ -15,6 +15,16 @@
 # 5. Configures screen for better usability
 # 6. Performs system checks (sudo privileges, Ubuntu version, available memory)
 
+# Get an optional VM name
+# Check if a parameter was provided
+if [ $# -eq 0 ]; then
+    # No parameter provided, use default value
+    VMNAME="EBAME"
+else
+    # Parameter provided, use it
+    VMNAME="$1"
+fi
+
 # Define paths for EBAME datasets
 VIROME1=/ifb/data/public/teachdata/ebame/viral-metagenomics
 VIROME2=~/data/ebame8/virome
@@ -27,73 +37,35 @@ while [[ -e "${backup_file}.${suffix}" ]]; do
     ((suffix++))
 done
 
+TAG="${VMNAME}-${suffix}"
+
 cp "$HOME/.bashrc" "${backup_file}.${suffix}"
 cd "$HOME" || exit
 
+
 # function to write in green bold the first argument, and the second argument in normal text
 green_bold () {
-    echo -e "\033[1;32m$1\t\033[0m $2"
+    printf "                            \r" &&    echo -e "\033[1;32m$1\t\033[0m $2"
 }
 
 red_bold () {
-    echo -e "\033[1;31m$1\t\033[0m $2"
+    printf "                            \r" &&    echo -e "\033[1;31m$1\t\033[0m $2"
 }
 
 yellow_bold () {
-    echo -e "\033[1;33m$1\t\033[0m $2"
+    printf "                            \r" &&    echo -e "\033[1;33m$1\t\033[0m $2"
 }
 
-status_print() {
-    local color_code="0" # default to no color
-    local clear_line=false
-    local new_line=false
-    local message=""
-
-    # Parse options
-    while [[ $# -gt 0 ]]; do
-        case "$1" in
-            --color=*)
-                case "${1#*=}" in
-                    red) color_code="31" ;;
-                    green) color_code="32" ;;
-                    yellow) color_code="33" ;;
-                    blue) color_code="34" ;;
-                    magenta) color_code="35" ;;
-                    cyan) color_code="36" ;;
-                    *) printf "Invalid color. Using default.\n" >&2 ;;
-                esac
-                shift
-                ;;
-            --clear)
-                clear_line=true
-                shift
-                ;;
-            --newline)
-                new_line=true
-                shift
-                ;;
-            *)
-                message+="$1 "
-                shift
-                ;;
-        esac
-    done
-
-    # Clear the line if requested
-    if [[ $clear_line == true ]]; then
-        printf "\r%*s" "$(tput cols)" ""
-    fi
-
-    # Print the message with color
-    printf "\e[%sm%s\e[0m" "$color_code" "$message"
-
-    # Move to the start of the line unless a new line is requested
-    if [[ $new_line == true ]]; then
-        printf "\n"
-    else
-        printf "\r"
-    fi
+write_log() {
+    local tag="$1"
+    local message="$2"
+    local datetimestamp="[time]"
+    datetimestamp="$(date +"%Y-%m-%d %H:%M:%S")"
+    echo -e "$datetimestamp\t$message" >> /tmp/ebame-${tag}.log
 }
+
+write_log "$TAG" "Starting EBAME setup script"
+
 
 # Function to check for sudo privileges
 check_sudo() {
@@ -117,22 +89,27 @@ function in_screen() {
     fi
 }
 '
-    # shellcheck disable=SC2016
-    local ps1_modification='PS1="$(in_screen)$PS1"'
+    
+# shellcheck disable=SC2016
+local ps1_modification='PS1="$(in_screen)$PS1"'
 
-    # Check if in_screen function is already present
-    if ! grep -q "function in_screen()" "$bashrc_file"; then
-        echo "$in_screen_function" >> "$bashrc_file"
-        echo "$ps1_modification" >> "$bashrc_file"
-        
-        if grep -q "function in_screen()" "$bashrc_file"; then
-            green_bold "OK" "in_screen function added to .bashrc"
-        else
-            yellow_bold "INFO" "Failed to add in_screen function to .bashrc, but do not worry"
-        fi
+# Check if in_screen function is already present
+write_log "$TAG" "Check in_screen()"
+if ! grep -q "function in_screen()" "$bashrc_file"; then
+    echo "$in_screen_function" >> "$bashrc_file"
+    echo "$ps1_modification" >> "$bashrc_file"
+
+    if grep -q "function in_screen()" "$bashrc_file"; then
+        green_bold "OK" "in_screen function added to .bashrc"
+        write_log "$TAG" "Check in_screen() - OK"
     else
-        green_bold "OK" "in_screen function already exists in .bashrc. No changes made."
+        yellow_bold "INFO" "Failed to add in_screen function to .bashrc, but do not worry"
+        write_log "$TAG" "Check in_screen() - Failed"
     fi
+else
+    green_bold "OK" "in_screen function already exists in .bashrc. No changes made."
+    write_log "$TAG" "Check in_screen() - existing"
+fi
 
 }
 echo -e "\033[1;32m---\t\033[0m EBAME-9 Virome Workshop \033[1;32m---\033[0m \n"
@@ -147,15 +124,18 @@ else
     red_bold "ERROR" "Cannot figure out if you are in an EBAME VM (Biosphere)"
     exit 1
 fi
-
+write_log "$TAG" "Location: $VIROME"
 yellow_bold "NOTE" "Shortcut to our dataset is in \033[1;32m\$VIROME\033[0m"
 
 # First, add a string to ~/.bashrc
 
 mkdir -p ~/bin/
 if [[ -d "$VIROME"/bin ]]; then
-    ln -s "$VIROME"/bin/* ~/bin/
-    green_bold "OK" "Linked \$VIROME/bin to ~/bin"
+    if [[ ! -e "$HOME"/bin/seqfu ]]; then
+        ln -s "$VIROME"/bin/* ~/bin/
+        green_bold "OK" "Linked \$VIROME/bin to ~/bin"
+        
+    fi
 fi
 FILE=~/.bashrc
 
@@ -164,22 +144,27 @@ STRING='shopt -s direxpand'
 # append STRING to FILE
 if grep -q "$STRING" "$FILE"; then
     green_bold "OK" ".bashrc already updated"
+    write_log "$TAG" "direxpand - existed"
 else
     echo "$STRING" >> "$FILE"
     echo "export VIROME=$VIROME" >> "$FILE"
     echo "shopt -s direxpand" >> "$FILE"
     green_bold "OK" "Updated settings in $FILE"
+    write_log "$TAG" "direxpand - OK"
 fi
 
 # Second, install some programs
 
 check_sudo
+write_log "$TAG" "Checksudo"
 
 # CHECK UBUNTU
 if grep "DISTRIB_DESCRIPTION" /etc/lsb-release > /dev/null 2> /dev/null; then
     green_bold "OK" "You are using $(grep DISTRIB_DESCRIPTION /etc/lsb-release | cut -f 2 -d '=')"
+    write_log "$TAG" "Check ubuntu - OK"
 else
     red_bold "ERROR" "Not Ubuntu?"
+    write_log "$TAG" "Check ubuntu - failed"
     exit 1
 fi
 
@@ -192,38 +177,58 @@ total_mem_gb=$((total_mem / 1024 / 1024))
 
 if [ $total_mem_gb -gt 30 ]; then
     green_bold "OK" "Total memory is greater than 30GB"
+    write_log "$TAG" "Total memory - OK"
 else
     yellow_bold "WARN" "Total memory is less than 32GB ($total_mem_gb GB)"
+    write_log "$TAG" "Total memory - failed"
 fi
 
 sudo apt update 2>/dev/null 1>/dev/null
 
 # Write a blue line ending with \r to be erased with the text "hello"
 
-status_print --color=blue "Installing dependencies..."
-if sudo apt install -y --quiet unzip  batcat visidata pv tree mc libpcre3-dev >/tmp/ebame-apt.out 2>/tmp/ebame-apt.err; then
-    ln -s /usr/bin/batcat ~/bin/bat
-    green_bold "OK" "Installed requirements ()"
+
+if sudo apt install -y --quiet unzip  bat visidata pv tree mc libpcre3-dev >/tmp/ebame-apt.out 2>/tmp/ebame-apt.err; then
+    if [[ ! -e  ~/bin/bat ]]; then
+        ln -s /usr/bin/batcat ~/bin/bat
+        
+    fi
+    write_log "$TAG" "apt - OK"
+    green_bold "OK" "Installed requirements"
 else
+    write_log "$TAG" "apt - failed"
     red_bold "ERROR" "unable to install requirements (you need unzip, visidata, libpcre3-dev)"
 fi
 
 # Install seqfu
-status_print --color=blue "Installing SeqFu..."
+
 URL="https://github.com/telatin/seqfu2/releases/download/v1.22.3/SeqFu-v1.22.3-Linux-x86_64.zip"
 if [[ -e ~/bin/seqfu ]]; then
-    VER=$(seqfu version)
+    VER=$("$HOME"/bin/seqfu version)
     green_bold "OK" "SeqFu already installed: $VER"
+    write_log "$TAG" "apt - existing"
 else
     if curl -sSL -o /tmp/seqfu.zip "$URL"; then
-        unzip -d "$HOME"/ /tmp/seqfu.zip
+        unzip -q -d "$HOME"/ /tmp/seqfu.zip
         green_bold "OK" "Installed SeqFu"
+        write_log "$TAG" "apt - OK"
     else
         red_bold "ERROR" "Could not install SeqFu"
+        write_log "$TAG" "apt - failed"
     fi
 fi
 
-status_print --color=blue "Finalizing..."
+# add $HOME/bin to PATH in .bashrc
+STRING='export PATH=$PATH:$HOME/bin/'
+# append STRING to FILE
+if grep -q "$STRING" "$FILE"; then
+    touch /tmp/ebame-path.stone
+else
+    echo "$STRING" >> "$FILE"
+    green_bold "OK" "Updated settings in $FILE"
+fi
+
+
 
 # Set up .screenrc configuration
 if [[ ! -e ~/.screenrc ]]; then
@@ -244,11 +249,7 @@ fi
 check_and_append_in_screen
 
 
-echo -e "\033[1;32m===\t\033[0m Setup finished \033[1;32m===\t\033[0m \n"
-
-
-
-sed -i.bak 's|\\h|EBAME|' ~/.bashrc
+sed -i.bak "s|\\\\h|${NAME}-VMs|" ~/.bashrc
 
 # Function to check if Conda is already initialized in .bashrc
 is_conda_initialized() {
@@ -276,5 +277,8 @@ fi
 
 # Final message
 echo -e "\033[1;32m===\t\033[0m Setup completed \033[1;32m===\t\033[0m"
-echo "To ensure all changes take effect, please restart your terminal session or run:"
+echo ""
+yellow_bold "TO DO" "To ensure all changes take effect, please restart your terminal session or run:"
+echo "----------------"
 echo "source ~/.bashrc"
+echo "----------------"
