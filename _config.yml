@@ -10,6 +10,12 @@ p2pu_ga_tracking_code:
 # Some files we need to exclude, so Github can build the site
 exclude: [Gemfile, Gemfile.lock, README.md]
 
+github:
+  repository_url: https://github.com/quadram-institute-bioscience/ebame-viromics
+  source:
+    branch: gh-pages  # or 'master' if that's your default branch
+
+
 defaults:
   -
     scope:
