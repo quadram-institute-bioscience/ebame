@@ -1,5 +1,5 @@
 ---
-title: Add Links to the Top Menu
+title: From vOTUs to Anvi'o
 ---
 
 ### Running the Anvi'o metagenomics workflow on the virome
@@ -29,12 +29,15 @@ anvi-profile -i sample_1.bam -c anvio/CONTIGS.db -T 4
 anvi-profile -i sample_2.bam -c anvio/CONTIGS.db -T 4
 anvi-profile -i sample_3.bam -c anvio/CONTIGS.db -T 4
 ```
+
 Merge profiles to generate the profile database.
+
 ```bash
 anvi-merge */PROFILE.db -o SAMPLES-MERGED -c CONTIGS.db   
-````
-Now you can look at your samples with `anvi-interactive`. 
+```
 
-## For the imatients
+Now you can look at your samples with `anvi-interactive`.
+
+## For the impatients
 
 You can use the `CONTIGS.db`, `PROFILE.db` and `AUXILIARY-DATA.db` as provided in the [FigShare](https://doi.org/10.6084/m9.figshare.27231678) folder!
