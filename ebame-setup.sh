@@ -233,7 +233,7 @@ fi
 # Set up .screenrc configuration
 if [[ ! -e ~/.screenrc ]]; then
     if curl -o ~/.screenrc -sSL "https://gist.githubusercontent.com/telatin/58ba9b07765a8f30b4a06eac1a39ff5e/raw/b4c39bbac20634d66509a6b848e343919076abc6/.bashrc"; then
-        green_bold "OK" "Installed .screenrc"
+        green_bold "OK" "Installed .screenrc just in case"
     else
         red_bold "WARNING" "Could not install .screenrc"
     fi
@@ -246,7 +246,11 @@ else
 fi
 
 # Add screen status check to bash prompt
-check_and_append_in_screen
+#check_and_append_in_screen
+# zellij
+wget --quiet "https://github.com/zellij-org/zellij/releases/latest/download/zellij-x86_64-unknown-linux-musl.tar.gz"
+tar xfz zellij-x86_64-unknown-linux-musl.tar.gz
+mv zellij ~/bin/
 
 
 sed -i.bak "s|\\\\h|${NAME}-VMs|" ~/.bashrc
