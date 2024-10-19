@@ -1,5 +1,9 @@
 # basic configuration
 markdown: kramdown
+highlighter: rouge
+kramdown:
+  syntax_highlighter: rouge
+
 permalink: /:categories/:title/
 
 # Change this tracking code with your own tracking code
