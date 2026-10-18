@@ -35,4 +35,3 @@ Features:
 * Version : 2.8
 * OS : Ubuntu
 
-# ebame
