@@ -1,0 +1,24 @@
+- name: Update the system (ubuntu/debian)
+  apt:
+    upgrade: safe
+    update_cache: yes
+
+- name: Install requirements (ubuntu/debian)
+  apt:
+    name:
+      - curl
+      - fail2ban
+      - python3-pip
+      - nfs-common
+    state: latest
+
+- name: unattended-upgrades configuration
+  copy:
+    src: "{{ item.src }}"
+    dest: /etc/apt/apt.conf.d/
+    owner: root
+    group: root
+    mode: '644'
+  with_items:
+    - { src: /ifb/apprepo/ebame-viromics/roles/common/templates/50unattended-upgrades }
+    - { src: /ifb/apprepo/ebame-viromics/roles/common/templates/10periodic }

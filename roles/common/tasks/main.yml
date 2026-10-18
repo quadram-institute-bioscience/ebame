@@ -1,0 +1,45 @@
+- name: Update the system and install basic requirements for Debian/Ubuntu
+  import_tasks: debian.yml
+  when: ansible_facts['os_family']|lower == 'debian'
+
+- name: Update the system and install basic requirements for RedHat/CentOS
+  import_tasks: redhat.yml
+  when: ansible_facts['os_family']|lower == 'redhat'
+
+# Generic tasks
+- name: Fail2ban default configuration for sshd
+  blockinfile:
+    path: /etc/fail2ban/jail.local
+    create : yes
+    state : present
+    block: |
+      [DEFAULT]
+      # Ban hosts for one hour:
+      bantime = 3600
+      # Override /etc/fail2ban/jail.d/00-firewalld.conf:
+      banaction = iptables-multiport[blocktype=DROP]
+      [sshd]
+      enabled = true
+
+- name: Enable and restart Fail2ban service
+  service:
+    name: fail2ban
+    enabled: yes
+    state: restarted
+
+- name: Update pip
+  ansible.builtin.pip:
+    name: pip
+    executable: pip3
+    state: latest
+    break_system_packages: true
+  ignore_errors: true
+
+- name: Install pyopenssl
+  ansible.builtin.pip:
+    name: 
+      - pyopenssl
+    executable: pip3
+    state: latest
+    break_system_packages: true
+  ignore_errors: true

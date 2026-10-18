@@ -1,0 +1,42 @@
+- hosts: all
+  roles:
+    - common
+
+  vars:
+    ifb_conda_root_prefix: /var/lib/miniforge
+
+  tasks:
+
+  - name: Copy IFB profile
+    ansible.builtin.copy:
+      src: profile_ifb.sh
+      dest: /etc/profile.d/ifb.sh
+      owner: root
+      mode: '0644'
+
+  - name: Create IFB root dir and bin
+    shell: . /etc/profile.d/ifb.sh && mkdir -p $IFB_BIN
+
+  - name: Create IFB data dir
+    shell: . /etc/profile.d/ifb.sh && mkdir -p $IFB_DATADIR
+
+  - name: Install Miniconda
+    script: miniconda-install.sh
+    # Fix ansible bug with ansible.builtin.script as a fully-qualified collection name (#13).
+    environment:
+      CONDA_ROOT_PREFIX: "{{ ifb_conda_root_prefix }}"
+    ignore_errors: true
+
+  - name: Set the conda root prefixe in the IFB profile
+    ansible.builtin.lineinfile:
+      path: /etc/profile.d/ifb.sh
+      regexp: '^CONDA_ROOT_PREFIX='
+      insertafter: '^# Biosphere profiles'
+      line: "CONDA_ROOT_PREFIX={{ ifb_conda_root_prefix }}"
+
+  - name: Set the mamba root prefixe in the IFB profile
+    ansible.builtin.lineinfile:
+      path: /etc/profile.d/ifb.sh
+      regexp: '^MAMBA_ROOT_PREFIX='
+      insertafter: '^# Biosphere profiles'
+      line: "MAMBA_ROOT_PREFIX={{ ifb_conda_root_prefix }}"

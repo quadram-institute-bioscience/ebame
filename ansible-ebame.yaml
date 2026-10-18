@@ -1,0 +1,55 @@
+- hosts: all
+  tasks:
+
+  - name: Install EBAME packages (Debian/Ubuntu)
+    apt:
+      name:
+        - openjdk-21-jre-headless
+        - pipx
+        - unzip
+        - bat
+        - visidata
+        - pv
+        - tree
+        - mc
+        - libpcre3-dev
+        - zoxide
+        - fzf
+      state: latest
+    when: ansible_facts['os_family']|lower == 'debian'
+
+  - name: Create batcat symlink (Debian/Ubuntu)
+    ansible.builtin.file:
+      src: /usr/bin/batcat
+      dest: /usr/local/bin/bat
+      state: link
+    when: ansible_facts['os_family']|lower == 'debian'
+
+  - name: Install EBAME packages (RedHat)
+    dnf:
+      name:
+        - java-21-openjdk-headless
+        - pipx
+        - unzip
+        - bat
+        - visidata
+        - pv
+        - tree
+        - mc
+        - pcre3-dev
+        - zoxide
+        - fzf
+      state: latest
+    when: ansible_facts['os_family']|lower == 'redhat'
+
+  - name: Download SeqFu binary
+    ansible.builtin.get_url:
+      url: https://github.com/quadram-institute-bioscience/seqfu_v1/releases/download/v1.30.3/seqfu-linux-x86_64
+      dest: /usr/local/bin/seqfu
+      mode: '0755'
+
+  - name: Install Nextflow
+    ansible.builtin.shell:
+      cmd: curl -fsSL https://get.nextflow.io | bash && mv nextflow /usr/local/bin/nextflow && chmod +x /usr/local/bin/nextflow
+      creates: /usr/local/bin/nextflow
+      chdir: /tmp

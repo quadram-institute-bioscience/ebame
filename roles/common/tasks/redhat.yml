@@ -1,0 +1,28 @@
+- name: Install DNF, repos IUS & EPEL (centos/redhat)
+  yum:
+    name:
+      - dnf
+      #- python-dnf
+      #- https://repo.ius.io/ius-release-el7.rpm
+      #- https://repo.ius.io/ius-release-el8.rpm # no repo for cos8 
+      # Many IUS packages have dependencies from the EPEL repository
+      - epel-release
+      #- https://dl.fedoraproject.org/pub/epel/epel-release-latest-8.noarch.rpm
+    state: latest
+
+- name: Update the system (centos/redhat)
+  dnf:
+    name: '*'
+    state: latest
+    update_cache: yes
+
+- name: Install requirements (centos/redhat)
+  dnf:
+    name: 
+      - fail2ban
+      - htop
+      - python3-pip
+      - vim
+      # Miniconda install
+      - bzip2
+    state: latest

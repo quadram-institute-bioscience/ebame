@@ -1,0 +1,32 @@
+- name: Install XFCE desktop and utilities (centos/redhat/rocky)
+  ansible.builtin.dnf:
+    name: 
+        - '@Xfce'
+        - firefox
+        - java-latest-openjdk
+    state: latest
+
+- name: Enable PowerTools repository (Rocky 8)
+  command:
+    cmd: dnf config-manager --set-enabled powertools
+  when: ansible_facts.distribution|lower == 'rocky'
+        and ansible_facts.distribution_major_version|int == 8
+
+- name: Enable CRB repository (Rocky 9+)
+  command:
+    cmd: dnf config-manager --set-enabled crb
+  when: ansible_facts.distribution|lower == 'rocky'
+        and ansible_facts.distribution_major_version|int >= 9
+
+- name: Install X2GO server (centos/redhat/rocky)
+  ansible.builtin.dnf:
+    name: 
+        - x2goserver
+    state: latest
+
+- name: Set X2GO profile for XFCE
+  ansible.builtin.lineinfile:
+    path: /etc/profile.d/x2go.sh
+    create: true
+    regexp: '^export X2GO_SESSION='
+    line: export X2GO_SESSION=XFCE

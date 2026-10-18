@@ -1,0 +1,8 @@
+# OS specific tasks
+- name: Configure remote desktop for Debian/Ubuntu
+  import_tasks: debian.yml
+  when: ansible_facts['os_family']|lower == 'debian'
+
+- name: Configure remote desktop for RedHat/CentOS/Rocky
+  import_tasks: redhat.yml
+  when: ansible_facts['os_family']|lower == 'redhat'

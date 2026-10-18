@@ -1,0 +1,69 @@
+# https://doc.ubuntu-fr.org/x2go
+# https://wiki.x2go.org/doku.php/wiki:repositories:start
+  
+  - name: Add X2Go repository
+    command: add-apt-repository -y ppa:x2go/stable
+    #  apt_repository module does not work behind proxy
+    when: ansible_facts.distribution|lower == 'ubuntu' 
+          and ansible_facts.distribution_major_version|int < 18
+  
+  - name: Install XFCE desktop on Ubuntu <18
+    apt:
+      name:
+        - xfce4
+        - x2goserver
+        - x2goserver-xsession
+      state: latest
+      update_cache: yes
+    when: ansible_facts.distribution|lower == 'ubuntu' 
+          and ansible_facts.distribution_major_version|int < 18
+
+  - name: Install XFCE desktop on Ubuntu >=18 to <22 and other distribs
+    apt:
+      name:
+        - xfce4
+        - x2goserver
+      state: latest
+      update_cache: yes
+    when: ansible_facts.distribution|lower != 'ubuntu' 
+          or (ansible_facts.distribution_major_version|int >= 18
+          and ansible_facts.distribution_major_version|int < 22)
+
+  - name: Set X2GO profile for XFCE
+    ansible.builtin.lineinfile:
+      path: /etc/profile.d/x2go.sh
+      create: true
+      regexp: '^export X2GO_SESSION='
+      line: export X2GO_SESSION=XFCE
+    when: ansible_facts.distribution|lower != 'ubuntu' 
+          or ansible_facts.distribution_major_version|int < 22
+
+  - name: Install desktop (MATE, X2Go, VNC) on Ubuntu >=22
+    apt:
+      name:
+        - ubuntu-mate-desktop
+        - x2goserver
+        # - x2gomatebindings
+        - tigervnc-standalone-server
+        - tigervnc-xorg-extension
+      state: latest
+      update_cache: yes
+    when: ansible_facts.distribution|lower == 'ubuntu'
+          and ansible_facts.distribution_major_version|int >= 22
+
+  - name: Set X2GO profile for MATE
+    ansible.builtin.lineinfile:
+      path: /etc/profile.d/x2go.sh
+      create: true
+      regexp: '^export X2GO_SESSION='
+      line: export X2GO_SESSION=MATE
+    when: ansible_facts.distribution|lower == 'ubuntu' 
+          and ansible_facts.distribution_major_version|int >= 22
+
+  - name: Install useful packages
+    apt:
+      name:
+        - default-jdk
+        - chromium-browser
+      state: latest
+      update_cache: yes

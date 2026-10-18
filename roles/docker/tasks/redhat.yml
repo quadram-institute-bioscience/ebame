@@ -1,0 +1,18 @@
+- name: Install requirements (centos/redhat/rocky)
+  ansible.builtin.dnf:
+    name: 
+      - yum-utils
+    state: latest
+
+- name: Add Docker's repository (centos/redhat/rocky)
+  ansible.builtin.command:
+    cmd: yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
+
+- name: Install Docker engine community with compose-v2 (centos/redhat/rocky)
+  ansible.builtin.dnf:
+    name:
+      - docker-ce
+      - docker-ce-cli
+      - containerd.io
+      - docker-compose-plugin
+    state: latest
