@@ -78,18 +78,6 @@ setup_zoxide_init() {
   fi
 }
 
-setup_pixi() {
-  local bashrc="$LOCUSER_HOME/.bashrc"
-  local pixi_bin="$LOCUSER_HOME/.pixi/bin/pixi"
-  if ! command -v pixi >/dev/null 2>&1 && [[ ! -f "$pixi_bin" ]]; then
-    sudo -u "$LOCUSER" bash -c 'curl -fsSL https://pixi.sh/install.sh | sh'
-  fi
-  if [[ -f "$pixi_bin" ]]; then
-    grep -q 'pixi' "$bashrc" 2>/dev/null \
-      || echo 'eval "$("$HOME/.pixi/bin/pixi" completion --shell bash)"' >> "$bashrc"
-  fi
-}
-
 setup_screenrc
 setup_tmux_conf
 setup_env_vars
@@ -97,6 +85,5 @@ setup_hostname_customization
 setup_database_symlinks
 setup_miniforge_ownership
 setup_zoxide_init
-setup_pixi
 
 chown -R "$LOCUSER:$LOCUSER" "$LOCUSER_HOME/.screenrc" "$LOCUSER_HOME/.tmux.conf" "$LOCUSER_HOME/.bashrc" 2>/dev/null
