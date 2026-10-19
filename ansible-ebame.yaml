@@ -16,6 +16,7 @@
         - zoxide
         - fzf
       state: latest
+      update_cache: yes
     when: ansible_facts['os_family']|lower == 'debian'
 
   - name: Create batcat symlink (Debian/Ubuntu)
